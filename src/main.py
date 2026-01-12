@@ -3,6 +3,7 @@ from src.intelligence.tag_normalizer import TagNormalizer
 from src.intelligence.cost_analyzer import CostAnalyzer
 from src.decision_engine.decision_engine import DecisionEngine
 from src.intelligence.recommendation_engine import RecommendationEngine
+from src.intelligence.report_generator import ReportGenerator
 
 
 def main():
@@ -11,10 +12,10 @@ def main():
     cost_analyzer = CostAnalyzer()
     decision_engine = DecisionEngine()
     recommender = RecommendationEngine()
+    reporter = ReportGenerator()
 
     instances = discovery.discover_instances()
-
-    print(f"\nDiscovered {len(instances)} EC2 instances\n")
+    results = []
 
     for inst in instances:
         normalized = normalizer.normalize(inst)
@@ -22,15 +23,25 @@ def main():
         decision = decision_engine.decide(normalized, cost)
         recommendation = recommender.generate(decision, inst)
 
-        print({
+        results.append({
             **normalized,
             **cost,
             **decision,
             **recommendation
         })
 
+    report = reporter.generate(results)
+
+    print("\n==== COST OPTIMIZATION REPORT ====\n")
+    print("SUMMARY:")
+    print(report["summary"])
+    print("\nDETAILS:")
+    for d in report["details"]:
+        print(d)
+
 
 if __name__ == "__main__":
     main()
+
 
 
