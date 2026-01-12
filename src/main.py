@@ -4,6 +4,7 @@ from src.intelligence.cost_analyzer import CostAnalyzer
 from src.decision_engine.decision_engine import DecisionEngine
 from src.intelligence.recommendation_engine import RecommendationEngine
 from src.intelligence.report_generator import ReportGenerator
+from src.actions.ec2_actions import EC2ActionEngine
 
 
 def main():
@@ -14,6 +15,9 @@ def main():
     recommender = RecommendationEngine()
     reporter = ReportGenerator()
 
+    # DRY RUN MODE
+    action_engine = EC2ActionEngine(dry_run=True)
+
     instances = discovery.discover_instances()
     results = []
 
@@ -22,12 +26,14 @@ def main():
         cost = cost_analyzer.analyze(inst)
         decision = decision_engine.decide(normalized, cost)
         recommendation = recommender.generate(decision, inst)
+        action = action_engine.stop_instance(decision)
 
         results.append({
             **normalized,
             **cost,
             **decision,
-            **recommendation
+            **recommendation,
+            **action
         })
 
     report = reporter.generate(results)
@@ -42,6 +48,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
 
 
 
