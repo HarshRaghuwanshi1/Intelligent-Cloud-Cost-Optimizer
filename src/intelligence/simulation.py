@@ -2,6 +2,8 @@ SIMULATION_MODE = False
 
 SIMULATED_INSTANCES = {
     "i-simulated-idle": {
+        "instance_id": "i-simulated-idle",
+        "instance_type": "t3.micro",
         "state": "running",
         "avg_cpu_7d": 0.2,
         "network_mb_7d": 1.0,
@@ -12,3 +14,4 @@ SIMULATED_INSTANCES = {
         }
     }
 }
+
