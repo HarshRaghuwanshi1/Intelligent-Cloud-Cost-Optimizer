@@ -29,6 +29,7 @@ def main():
         action = action_engine.stop_instance(decision)
 
         results.append({
+            **inst,
             **normalized,
             **cost,
             **decision,
