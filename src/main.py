@@ -5,6 +5,7 @@ from src.decision_engine.decision_engine import DecisionEngine
 from src.intelligence.recommendation_engine import RecommendationEngine
 from src.intelligence.report_generator import ReportGenerator
 from src.actions.ec2_actions import EC2ActionEngine
+from src.intelligence.simulation import SIMULATION_MODE, SIMULATED_INSTANCES
 
 
 def main():
@@ -22,6 +23,11 @@ def main():
     results = []
 
     for inst in instances:
+      if SIMULATION_MODE:
+       sim = SIMULATED_INSTANCES.get(inst["instance_id"])
+        if sim:
+           inst.update(sim)
+
         normalized = normalizer.normalize(inst)
         cost = cost_analyzer.analyze(inst)
         decision = decision_engine.decide(normalized, cost)
